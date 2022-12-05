@@ -1,4 +1,4 @@
-package com.digibook.user.test;
+package com.digitalbook.user.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

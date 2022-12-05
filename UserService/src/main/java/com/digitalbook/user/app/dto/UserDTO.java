@@ -1,65 +1,60 @@
-package com.digitalbook.user.app.models;
+package com.digitalbook.user.app.dto;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.springframework.format.annotation.NumberFormat;
+import com.digitalbook.user.app.models.Role;
 
-@Entity
-@Table(	schema = "testdb",name = "users", 
-		uniqueConstraints = { 
-			@UniqueConstraint(columnNames = "user_name"),
-			@UniqueConstraint(columnNames = "user_email") 
-		})
-public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+public class UserDTO {
+
 	private Long id;
 
 	@NotBlank
 	@Size(max = 20)
-	@Column(name = "user_name")
 	private String username;
 
 	@NotBlank
 	@Size(max = 50)
 	@Email
-	@Column(name = "user_email")
 	private String email;
 
 	@NotBlank
 	@Size(max = 120)
-	@Column(name = "user_passwd")
 	private String password;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(	name = "user_roles", 
-				joinColumns = @JoinColumn(name = "user_id"), 
-				inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@Transient
 	private Set<Role> roles = new HashSet<>();
-	
-	@Column(name = "is_active")
+
 	private boolean isActive;
 	
-//	@Size(max = 10)
-	@Column(name = "mobile_no")
-	private String mobileNo;
+	private int mobileNo;
 
-	public User() {
+	public UserDTO() {
 	}
 
-	public User(String username, String email, String mobileNo, String password) {
+
+	public UserDTO(Long id, @NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email,
+			@NotBlank @Size(max = 120) String password, Set<Role> roles, boolean isActive, int mobileNo) {
+		super();
+		this.id = id;
 		this.username = username;
 		this.email = email;
-		this.mobileNo=mobileNo;
 		this.password = password;
+		this.roles = roles;
+		this.isActive = isActive;
+		this.mobileNo = mobileNo;
 	}
+
 
 	public Long getId() {
 		return id;
@@ -101,19 +96,24 @@ public class User {
 		this.roles = roles;
 	}
 
+
 	public boolean isActive() {
 		return isActive;
 	}
+
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 
-	public String getMobileNo() {
+
+	public int getMobileNo() {
 		return mobileNo;
 	}
 
-	public void setMobileNo(String mobileNo) {
+
+	public void setMobileNo(int mobileNo) {
 		this.mobileNo = mobileNo;
 	}
+
 }
