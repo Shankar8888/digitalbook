@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.digitalbook.book.app.dto.BookResponse;
 import com.digitalbook.book.app.exceptions.BookAlreadyExistsException;
 import com.digitalbook.book.app.exceptions.BookAlreadySubscribedException;
 import com.digitalbook.book.app.exceptions.BookNotFoundException;
@@ -44,7 +46,7 @@ public class BookController {
 	public ResponseEntity<?> getAllBooks() {
 		logger.info("Inside getAllBooks method in BookController");
 
-		List<Book> book = bookService.getAllBooks();
+		List<BookResponse> book =bookService.getAllBooks();
 			if (book.size()==0) {
 				throw new BookNotFoundException();
 			}
@@ -55,7 +57,7 @@ public class BookController {
 	public ResponseEntity<?> getBookById(@PathVariable("book-id") int bookId) {
 		logger.info("Inside getBookById method in BookController");
 
-		Book book = bookService.getBookById(bookId);
+		BookResponse book = bookService.getBookById(bookId);
 			if (null == book) {
 				throw new BookNotFoundException();
 			}
@@ -78,7 +80,7 @@ public class BookController {
 			@RequestParam String category,@RequestParam String publisher,@RequestParam double price) {
 		logger.info("Inside searchBook method in BookController");
 
-		Book book = bookService.searchBook(true,title,author,category,publisher,price);
+		BookResponse book = bookService.searchBook(false,title,author,category,publisher,price);
 			if (null == book) {
 				throw new BookNotFoundException();
 			}
@@ -104,6 +106,7 @@ public class BookController {
 		}
 	}
 	
+	//Book updates
 	@PutMapping("/update")
 	public ResponseEntity<?> updateBook(@Valid @RequestBody Book book)  throws MethodArgumentNotValidException{
 		logger.info("Inside updateBook method in BookController");
@@ -118,6 +121,7 @@ public class BookController {
 		}
 	}
 	
+	//book blocked yes/no updates
 	@PutMapping("/update/{book-id}")
 	public ResponseEntity<?> updateForBookBlocked(@PathVariable("book-id") int bookId, @RequestParam("block") boolean isblocked) {
 		logger.info("Inside updateForBookBlocked method in BookController");
