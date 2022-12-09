@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.digitalbook.book.app.dto.BookResponse;
-import com.digitalbook.book.app.exceptions.BookAlreadyExistsException;
-import com.digitalbook.book.app.exceptions.BookNotFoundException;
+import com.digitalbook.book.app.exceptions.InvalidRequestException;
+import com.digitalbook.book.app.exceptions.RequestNotFoundException;
 import com.digitalbook.book.app.models.Book;
 import com.digitalbook.book.app.repository.BookRepository;
 import com.digitalbook.book.app.util.Util;
@@ -35,7 +35,8 @@ public class BookService {
 		List<BookResponse> bookRes=new ArrayList<BookResponse>();
 		
 		 if(books.size()==0) {
-			 throw new BookNotFoundException();
+//			 throw new RequestNotFoundException("Requested books not found..!!");
+			 return null;
 		 }
 		 
 		for(Book book:books) {
@@ -48,13 +49,15 @@ public class BookService {
 	public BookResponse getBookById(int bookId) {
 		logger.info("Inside getBookById method in BookService");
 		BookResponse bookRes=null;
-		Book book= bookRepo.findById(bookId).get();
-		 if(book==null) {
-			 throw new BookNotFoundException();
-		 }
-		if(!book.getIsBlocked())
-		bookRes=new ModelMapper().map(book,BookResponse.class);
+		Optional<Book> book= bookRepo.findById(bookId);
+		 if(book.isEmpty()) {
+//			 throw new RequestNotFoundException("Requested book not Found..!");
+			 return null;
+		 }else {
+		if(!book.get().getIsBlocked())
+		bookRes=new ModelMapper().map(book.get(),BookResponse.class);
 		return bookRes;
+		 }
 	}
 	
 	public Book DeleteBookById(int bookId) {
@@ -63,7 +66,8 @@ public class BookService {
 		 
 //		 System.out.println(book);
 		 if(book.isEmpty()) {
-			 throw new BookNotFoundException();
+//			 throw new RequestNotFoundException("Requested book not found..!");
+			 return null;
 		 }
 		 bookRepo.deleteById(bookId);
 		 return book.get();
@@ -76,7 +80,8 @@ public class BookService {
 			BookResponse bookResponse=null;
 		    Book bookResult= bookRepo.findBookByFilters(blockStatus,title, author, category, publisher, price);
 		    if(bookResult==null) {
-				 throw new BookNotFoundException();
+//				 throw new RequestNotFoundException("Requested book not found..!");
+		    	return bookResponse;
 			 }
 			if(!bookResult.getIsBlocked())
 			bookResponse=new ModelMapper().map(bookResult,BookResponse.class);
@@ -89,7 +94,7 @@ public class BookService {
 		int bookFound=bookRepo.findBookByTitleAndAuthor(book.getTitle(),book.getAuthor());
 		
 		if(bookFound>0) {
-			throw new BookAlreadyExistsException();
+			throw new InvalidRequestException("Requested Book already Exists with Title:"+book.getTitle()+" and Author:"+book.getAuthor());
 		}
 		if(book.getId()==0) {
 			book.setIsBlocked(false);
@@ -99,18 +104,23 @@ public class BookService {
 	}
 	
 	@Transactional
-	public Book updateBook(Book book) throws BookNotFoundException{
+	public Book updateBook(Book book, int bookId) throws RequestNotFoundException{
 		logger.info("Inside updateBook method in BookService");
 		
-		if(book.getId()!=0) {
-			Book bookExists=bookRepo.findById(book.getId()).get();   
-			book= Book.existingBookVal(book,bookExists);
+		if(bookId!=0) {
+			Optional<Book> bookExists=bookRepo.findById(bookId); 
+			if(bookExists.isEmpty()) {
+//				 throw new RequestNotFoundException("Requested book not found..!");
+				return null;
+			}else {
+			book= Book.setExistingBookValues(book,bookExists.get());
+			}
 		}
 			return bookRepo.save(book);
 	}
 
 	@Transactional
-	public void updateForBookBlocked(int bookId, boolean isblocked) throws BookNotFoundException{
+	public void updateForBookBlocked(int bookId, boolean isblocked) throws RequestNotFoundException{
 		logger.info("Inside updateForBookBlocked method in BookService");
 		bookRepo.updateForBookBlocked(bookId, isblocked);
 	}

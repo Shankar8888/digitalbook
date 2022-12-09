@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(schema = "testdb2", name = "books")
+@Table(schema = "testdb", name = "books")
 public class Book {
 
 	@Id
@@ -65,9 +65,13 @@ public class Book {
 	public Book() {
 	}
 	
-	public Book(int id, String title, String author, String publisher,
-			double price, String category, String content, LocalDate publishedDate,
-			LocalDateTime createdDateTime, boolean isBlocked, byte[] logo) {
+
+
+	public Book(int id, @NotBlank(message = "Book Title is required") String title,
+			@NotBlank(message = "Book Author is required") String author,
+			@NotBlank(message = "Book Publisher is required") String publisher,
+			@NotNull(message = "Book Price is required") double price, String category, String content,
+			LocalDate publishedDate, LocalDateTime createdDateTime, Boolean isBlocked, byte[] logo) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -78,11 +82,13 @@ public class Book {
 		this.content = content;
 		this.publishedDate = publishedDate;
 		this.createdDateTime = createdDateTime;
-		this.isBlocked=isBlocked;
+		this.isBlocked = isBlocked;
 		this.logo = logo;
 	}
 
-	public static Book existingBookVal(Book book, Book bookExists) {
+
+
+	public static Book setExistingBookValues(Book book, Book bookExists) {
 		
 		if(book.getTitle()==null)
 			book.setTitle(bookExists.getTitle());
@@ -191,6 +197,7 @@ public class Book {
 				+ publisher + ", price=" + price + ", category=" + category + ", content=" + content
 				+ ", publishedDate=" + publishedDate + ", createdDateTime=" + createdDateTime + "]";
 	}
+
 
 
 }

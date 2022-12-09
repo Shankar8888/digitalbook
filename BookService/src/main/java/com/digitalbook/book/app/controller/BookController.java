@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.digitalbook.book.app.dto.BookResponse;
-import com.digitalbook.book.app.exceptions.BookAlreadyExistsException;
-import com.digitalbook.book.app.exceptions.BookAlreadySubscribedException;
-import com.digitalbook.book.app.exceptions.BookNotFoundException;
+import com.digitalbook.book.app.exceptions.InvalidRequestException;
+import com.digitalbook.book.app.exceptions.RequestNotFoundException;
 import com.digitalbook.book.app.models.Book;
-import com.digitalbook.book.app.models.Subscription;
 import com.digitalbook.book.app.service.BookService;
-
-import net.bytebuddy.implementation.bytecode.Throw;
 
 @RestController
 @RequestMapping("/books")
@@ -47,9 +42,9 @@ public class BookController {
 		logger.info("Inside getAllBooks method in BookController");
 
 		List<BookResponse> book =bookService.getAllBooks();
-			if (book.size()==0) {
-				throw new BookNotFoundException();
-			}
+//			if (book.size()==0) {
+//				throw new RequestNotFoundException("Requested Book not Found..!");
+//			}
 		return ResponseEntity.status(200).body(book);
 	}
 	
@@ -58,9 +53,10 @@ public class BookController {
 		logger.info("Inside getBookById method in BookController");
 
 		BookResponse book = bookService.getBookById(bookId);
-			if (null == book) {
-				throw new BookNotFoundException();
-			}
+		System.out.println(book);
+//			if (null == book) {
+//				throw new RequestNotFoundException("Requested Book not Found..!");
+//			}
 		return ResponseEntity.status(200).body(book);
 	}
 	
@@ -69,9 +65,9 @@ public class BookController {
 		logger.info("Inside DeleteBookById method in BookController");
 
 		Book book = bookService.DeleteBookById(bookId);
-			if (null == book) {
-				throw new BookNotFoundException();
-			}
+//			if (null == book) {
+//				throw new RequestNotFoundException("Requested book not Found..!");
+//			}
 		return ResponseEntity.status(200).body(book);
 	}
 	
@@ -81,9 +77,9 @@ public class BookController {
 		logger.info("Inside searchBook method in BookController");
 
 		BookResponse book = bookService.searchBook(false,title,author,category,publisher,price);
-			if (null == book) {
-				throw new BookNotFoundException();
-			}
+//			if (null == book) {
+//				throw new RequestNotFoundException("Requested book not found..!");
+//			}
 		return ResponseEntity.status(200).body(book);
 	}
 	
@@ -97,9 +93,9 @@ public class BookController {
 			newBook=bookService.saveBook(book);
 		return ResponseEntity.status(201).body(newBook);
 		}
-		catch(BookAlreadyExistsException ex){
-			logger.error(ex.getMessage(book.getTitle(), book.getAuthor()));
-			return ResponseEntity.status(400).body("Requested Book already Exists with Title:"+book.getTitle()+" and Author:"+book.getAuthor());
+		catch(InvalidRequestException ex){
+			logger.error(ex.getMessage());
+			throw new InvalidRequestException("Requested Book already Exists with Title:"+book.getTitle()+" and Author:"+book.getAuthor());
 		}catch(Exception ex){
 			ex.printStackTrace();
 			return ResponseEntity.status(500).body("Something went wrong. Requested Book not Saved.");
@@ -108,11 +104,11 @@ public class BookController {
 	
 	//Book updates
 	@PutMapping("/update")
-	public ResponseEntity<?> updateBook(@Valid @RequestBody Book book)  throws MethodArgumentNotValidException{
+	public ResponseEntity<?> updateBook(@Valid @RequestBody Book book,@RequestParam("book-id") int bookId)  throws MethodArgumentNotValidException{
 		logger.info("Inside updateBook method in BookController");
 		Book updatedBook=null;
 		try {
-			updatedBook=bookService.updateBook(book);
+			updatedBook=bookService.updateBook(book,bookId);
 		return ResponseEntity.status(200).body(updatedBook);
 		}catch(Exception e){
 			e.printStackTrace();

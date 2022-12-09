@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.digitalbook.book.app.exceptions.BookAlreadySubscribedException;
-import com.digitalbook.book.app.exceptions.BookNotFoundException;
-import com.digitalbook.book.app.exceptions.BookSubscriptionNotCancelledException;
-import com.digitalbook.book.app.exceptions.SubscriptionNotFoundException;
+import com.digitalbook.book.app.exceptions.InvalidRequestException;
+import com.digitalbook.book.app.exceptions.RequestNotFoundException;
 import com.digitalbook.book.app.models.Book;
 import com.digitalbook.book.app.models.Subscription;
 import com.digitalbook.book.app.repository.BookRepository;
@@ -37,7 +35,7 @@ public class SubscriptionService {
 		int bookSubscribed=subscrRepo.findSubscriptionExists(userId,bookId);
 		
 		if(bookSubscribed>0) {
-			throw new BookAlreadySubscribedException();
+			throw new InvalidRequestException("Requested Book already Subscribed by user: "+userId);
 		}
 		if(userId!=0 && bookId!=0) {
 			Subscription sub=new Subscription();
@@ -57,11 +55,11 @@ public class SubscriptionService {
 		List<Integer> getAllBookIds=subscrRepo.findAllSubscribedBookIds(userId);
 		
 		if(getAllBookIds.size()==0 && getAllBookIds.isEmpty()) {
-			throw new SubscriptionNotFoundException();
+			throw new RequestNotFoundException("Subscribed book not found..!");
 		}else {
 		    findSubscribedBooks=bookRepo.findAllById(getAllBookIds);
 		    if(findSubscribedBooks.size()==0 && getAllBookIds.isEmpty()) {
-				throw new BookNotFoundException();	
+				throw new RequestNotFoundException("Requested book not found..!");	
 			}
 		}
 		return findSubscribedBooks;
@@ -73,11 +71,41 @@ public class SubscriptionService {
 		Subscription subscription=subscrRepo.findSubscriptionOfBook(userId,subscriptionId);
 		
 		if(subscription==null) {
-			throw new SubscriptionNotFoundException();
+			throw new RequestNotFoundException("Subscription of book not found..!");
 		}else {
 			findBookBySubscrId=bookRepo.findById(subscription.getBookId()).get();
 		    if(findBookBySubscrId==null) {
-				throw new BookNotFoundException();	
+				throw new RequestNotFoundException("Requested book not found..!");	
+			}
+		}
+		return findBookBySubscrId;
+	}
+	
+//	public Book fetchSubscribedBookContent(int userId, int subscriptionId) {
+//		Book findBookBySubscrId=null;
+//		Subscription subscription=subscrRepo.findSubscriptionOfBook(userId,subscriptionId);
+//		
+//		if(subscription==null) {
+//			throw new SubscriptionNotFoundException();
+//		}else {
+//			findBookBySubscrId=bookRepo.findById(subscription.getBookId()).get();
+//		    if(findBookBySubscrId==null) {
+//				throw new RequestNotFoundException("Requested book not found..!");	
+//			}
+//		}
+//		return findBookBySubscrId;
+//	}
+	
+	public Book readSubscribedBook(int userId, int subscriptionId) {
+		Book findBookBySubscrId=null;
+		Subscription subscription=subscrRepo.findSubscriptionOfBook(userId,subscriptionId);
+		
+		if(subscription==null) {
+			throw new RequestNotFoundException("Subscription of book not found..!");
+		}else {
+			findBookBySubscrId=bookRepo.findById(subscription.getBookId()).get();
+		    if(findBookBySubscrId==null) {
+				throw new RequestNotFoundException("Requested book not found..!");	
 			}
 		}
 		return findBookBySubscrId;
@@ -89,7 +117,7 @@ public class SubscriptionService {
 		Subscription subscrFound=subscrRepo.findSubscriptionOfBook(userId, subscriptionId);
 		
 		if(subscrFound==null) {
-			throw new SubscriptionNotFoundException();
+			throw new RequestNotFoundException("Subscription of book not found..!");
 		}else {
 			
 			long hours = ChronoUnit.HOURS.between(Util.getLocalDateTime(),subscrFound.getCreatedDateTime());
@@ -97,7 +125,7 @@ public class SubscriptionService {
 				subscrRepo.delete(subscrFound);
 				return subscrFound;
 			}else {
-				throw new BookSubscriptionNotCancelledException();
+				throw new InvalidRequestException("Subscription cancel request not proceeds..!");
 			}
 			}
 	}

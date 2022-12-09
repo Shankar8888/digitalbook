@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.digitalbook.book.app.exceptions.BookAlreadySubscribedException;
-import com.digitalbook.book.app.exceptions.BookNotFoundException;
-import com.digitalbook.book.app.exceptions.BookSubscriptionNotCancelledException;
-import com.digitalbook.book.app.exceptions.SubscriptionNotFoundException;
+import com.digitalbook.book.app.exceptions.InvalidRequestException;
+import com.digitalbook.book.app.exceptions.RequestNotFoundException;
 import com.digitalbook.book.app.models.Book;
 import com.digitalbook.book.app.models.Subscription;
 import com.digitalbook.book.app.service.SubscriptionService;
@@ -39,9 +37,9 @@ public class SubscriptionController {
 			newSubscription = subscrService.subscribeBook(userId,bookId);
 		return ResponseEntity.status(201).body(newSubscription);
 		}
-		catch(BookAlreadySubscribedException ex){
-			ex.getMessage(userId);
-			return ResponseEntity.status(400).body("This Book already subscribed by you..!");
+		catch(InvalidRequestException ex){
+			logger.error(ex.getMessage());
+			throw new InvalidRequestException("This Book already subscribed by you..!");
 		}catch(Exception ex){
 			ex.printStackTrace();
 			return ResponseEntity.status(500).body("Something went wrong. Requested Book is not subscribed by you..!");
@@ -57,9 +55,9 @@ public class SubscriptionController {
 				subscribedBooks = subscrService.fetchAllSubscribedBooks(userId);
 			return ResponseEntity.status(201).body(subscribedBooks);
 			}
-			catch(SubscriptionNotFoundException ex){
-				ex.getMessage(userId);
-				return ResponseEntity.status(404).body("No any book subscribed by you..!");
+			catch(RequestNotFoundException ex){
+//				ex.getMessage(userId);
+			 throw new RequestNotFoundException("Subscription of book not found..!");
 			}catch(Exception ex){
 				ex.printStackTrace();
 				return ResponseEntity.status(500).body("Something went wrong. Current request was not proceeds..!");
@@ -73,22 +71,22 @@ public class SubscriptionController {
 
 			Book subscribedBook = subscrService.fetchSubscribedBook(userId,subscriptionId);
 				if (subscribedBook == null) {
-					throw new SubscriptionNotFoundException();
+					throw new RequestNotFoundException("Subscription of book not found..!");
 				}
 			return ResponseEntity.status(200).body(subscribedBook);
 		}
 		
-//		//Reader can read subscribed book by id
-//				@GetMapping(value = "reader/{user-id}/books/{subscription-id}")
-//				public ResponseEntity<?> fetchSubscribedBook(@PathVariable("user-id") int userId,@PathVariable("subscription-id") int subscriptionId) {
-//					logger.info("Inside fetchSubscribedBook method in SubscriptionController");
-//
-//					Book subscribedBook = subscrService.fetchSubscribedBook(userId,subscriptionId);
-//						if (subscribedBook == null) {
-//							throw new SubscriptionNotFoundException();
-//						}
-//					return ResponseEntity.status(200).body(subscribedBook);
-//				}
+		//Reader can read subscribed book by id
+				@GetMapping(value = "reader/{user-id}/books/{subscription-id}/read")
+				public ResponseEntity<?> readSubscribedBook(@PathVariable("user-id") int userId,@PathVariable("subscription-id") int subscriptionId) {
+					logger.info("Inside fetchSubscribedBook method in SubscriptionController");
+
+					Book subscribedBook = subscrService.readSubscribedBook(userId,subscriptionId);
+						if (subscribedBook == null) {
+							throw new RequestNotFoundException("Subscribed book not found..!");
+						}
+					return ResponseEntity.status(200).body(subscribedBook);
+				}
 		
 		//cancel Subscription within 24 hr
 		@GetMapping(value = "reader/{user-id}/books/{subscription-id}/cancel")
@@ -98,16 +96,16 @@ public class SubscriptionController {
 			try {
 			Subscription unsubscribedBook = subscrService.cancelSubscription(userId,subscriptionId);
 			return ResponseEntity.status(200).body("Successfully Cancel subscription for bookId:"+unsubscribedBook.getBookId());
-			}catch (SubscriptionNotFoundException e) {
-				e.getMessage(userId);
-				return ResponseEntity.status(404).body("No any book subscribed by you..!");
-			}catch (BookSubscriptionNotCancelledException ex) {
+			}catch (RequestNotFoundException e) {
+				throw new RequestNotFoundException("No any book subscribed by you..!");
+			}catch (InvalidRequestException ex) {
 				ex.getMessage();
-				return ResponseEntity.status(400).body("Subscription cancel request not proceeds..!");
+				throw new InvalidRequestException("Subscription cancel request not proceeds..!");
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
 				return ResponseEntity.status(500).body("something went wrong..Subscription cancel request not proceeds..!");
 			}
 		}
+		
 }

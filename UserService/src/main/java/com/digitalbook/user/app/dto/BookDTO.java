@@ -1,6 +1,8 @@
 package com.digitalbook.user.app.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 public class BookDTO {
 
@@ -12,13 +14,19 @@ public class BookDTO {
 	private double price;
 	private String content;
 	private String createdBy;
-	private LocalDate createdDate;
+	private LocalDate publishedDate;
+	private LocalDateTime createdDateTime;
+	private Boolean isBlocked;
+	private byte[] logo;
 	
 	public BookDTO() {
 	}
 	
+	
+	
 	public BookDTO(int id, String title, String author, String publisher, String category, double price, String content,
-			String createdBy, LocalDate createdDate) {
+			String createdBy, LocalDate publishedDate, LocalDateTime createdDateTime, Boolean isBlocked, byte[] logo) {
+		super();
 		this.id = id;
 		this.title = title;
 		this.author = author;
@@ -27,9 +35,14 @@ public class BookDTO {
 		this.price = price;
 		this.content = content;
 		this.createdBy = createdBy;
-		this.createdDate = createdDate;
+		this.publishedDate = publishedDate;
+		this.createdDateTime = createdDateTime;
+		this.isBlocked = isBlocked;
+		this.logo = logo;
 	}
-	
+
+
+
 	public int getId() {
 		return id;
 	}
@@ -78,17 +91,63 @@ public class BookDTO {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	public LocalDate getCreatedDate() {
-		return createdDate;
+	public LocalDate getPublishedDate() {
+		return publishedDate;
 	}
-	public void setCreatedDate(LocalDate createdDate) {
-		this.createdDate = createdDate;
+
+
+
+	public void setPublishedDate(LocalDate publishedDate) {
+		this.publishedDate = publishedDate;
 	}
+
+
+
+	public LocalDateTime getCreatedDateTime() {
+		return createdDateTime;
+	}
+
+
+
+	public void setCreatedDateTime(LocalDateTime createdDateTime) {
+		this.createdDateTime = createdDateTime;
+	}
+
+
+
+	public Boolean getIsBlocked() {
+		return isBlocked;
+	}
+
+
+
+	public void setIsBlocked(Boolean isBlocked) {
+		this.isBlocked = isBlocked;
+	}
+
+
+
+	public byte[] getLogo() {
+		return logo;
+	}
+
+
+
+	public void setLogo(byte[] logo) {
+		this.logo = logo;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "BookDTO [id=" + id + ", title=" + title + ", author=" + author + ", publisher=" + publisher
 				+ ", category=" + category + ", price=" + price + ", content=" + content + ", createdBy=" + createdBy
-				+ ", createdDate=" + createdDate + "]";
+				+ ", publishedDate=" + publishedDate + ", createdDateTime=" + createdDateTime + ", isBlocked="
+				+ isBlocked + ", logo=" + Arrays.toString(logo) + "]";
 	}
+
+
+
 	
 	}
