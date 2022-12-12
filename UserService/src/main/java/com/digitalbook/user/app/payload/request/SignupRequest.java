@@ -29,9 +29,9 @@ public class SignupRequest {
 	private boolean isActive;
 	
 //	@NotBlank
-	@Size(max = 10, message = "mobileNo accepts upto 10 digits")
-	@Pattern(regexp="(^$|[0-9]{10})",message = "mobileNo accepts numbers only")
-	private String mobileNo;
+//	@Size(max = 10, message = "mobileNo accepts upto 10 digits")
+//	@Pattern(regexp="(^$|[0-9]{10})",message = "mobileNo accepts numbers only")
+//	private String mobileNo;
 
   
     public String getUsername() {
@@ -73,12 +73,12 @@ public class SignupRequest {
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-
-	public String getMobileNo() {
-		return mobileNo;
-	}
-
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
-	}
+//
+//	public String getMobileNo() {
+//		return mobileNo;
+//	}
+//
+//	public void setMobileNo(String mobileNo) {
+//		this.mobileNo = mobileNo;
+//	}
 }

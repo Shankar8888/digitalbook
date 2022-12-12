@@ -1,10 +1,10 @@
-package com.digitalbook.book.app.dto;
+package com.digitalbook.user.app.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-public class BookDTO {
+public class Book {
 
 	private int id;
 	private String title;
@@ -19,12 +19,12 @@ public class BookDTO {
 	private Boolean isBlocked;
 	private byte[] logo;
 	
-	public BookDTO() {
+	public Book() {
 	}
 	
 	
 	
-	public BookDTO(int id, String title, String author, String publisher, String category, double price, String content,
+	public Book(int id, String title, String author, String publisher, String category, double price, String content,
 			String createdBy, LocalDate publishedDate, LocalDateTime createdDateTime, Boolean isBlocked, byte[] logo) {
 		super();
 		this.id = id;

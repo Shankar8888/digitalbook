@@ -36,15 +36,13 @@ public class UserDTO {
 	private Set<Role> roles = new HashSet<>();
 
 	private boolean isActive;
-	
-	private int mobileNo;
 
 	public UserDTO() {
 	}
 
 
 	public UserDTO(Long id, @NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email,
-			@NotBlank @Size(max = 120) String password, Set<Role> roles, boolean isActive, int mobileNo) {
+			@NotBlank @Size(max = 120) String password, Set<Role> roles, boolean isActive) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -52,7 +50,6 @@ public class UserDTO {
 		this.password = password;
 		this.roles = roles;
 		this.isActive = isActive;
-		this.mobileNo = mobileNo;
 	}
 
 
@@ -104,16 +101,6 @@ public class UserDTO {
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
-	}
-
-
-	public int getMobileNo() {
-		return mobileNo;
-	}
-
-
-	public void setMobileNo(int mobileNo) {
-		this.mobileNo = mobileNo;
 	}
 
 }

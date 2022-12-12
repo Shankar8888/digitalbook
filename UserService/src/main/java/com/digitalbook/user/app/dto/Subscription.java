@@ -1,4 +1,4 @@
-package com.digitalbook.book.app.models;
+package com.digitalbook.user.app.dto;
 
 import java.time.LocalDateTime;
 
@@ -12,40 +12,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity
-@Table(schema = "testbd2", name = "subscription")
 public class Subscription {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Integer id;
 	
-	@Column(name = "user_id")
 	private int userId;
-//	@ManyToOne
-//	@JoinColumn(name = "user_id")
-//	private User userId;
 
-	@ManyToOne
-	@JoinColumn(name = "book_id")
 	private Book book;
-	
-	@Column(name = "subscription_date")
+
 	private LocalDateTime subscriptionDate;
-	
-	@Column(name="cancelled")
+
 	private boolean isCancelled;
 	
-	@Column(name="date_of_cancel")
 	private LocalDateTime dateOfCancellation;
 	
+
+
 
 	public Subscription() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 
 	public Subscription(Integer id, int userId, Book book, LocalDateTime subscriptionDate, boolean isCancelled,
 			LocalDateTime dateOfCancellation) {
@@ -74,6 +61,7 @@ public class Subscription {
 		this.userId = userId;
 	}
 
+
 	public Book getBook() {
 		return book;
 	}
@@ -81,7 +69,6 @@ public class Subscription {
 	public void setBook(Book book) {
 		this.book = book;
 	}
-
 
 	public LocalDateTime getSubscriptionDate() {
 		return subscriptionDate;

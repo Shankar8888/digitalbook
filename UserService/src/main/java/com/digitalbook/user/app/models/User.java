@@ -1,5 +1,6 @@
 package com.digitalbook.user.app.models;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,16 +49,15 @@ public class User {
 	private boolean isActive;
 	
 //	@Size(max = 10)
-	@Column(name = "mobile_no")
-	private String mobileNo;
+	@Column(name = "created_date")
+	private LocalDateTime createdDate;
 
 	public User() {
 	}
 
-	public User(String username, String email, String mobileNo, String password) {
+	public User(String username, String email, String password) {
 		this.username = username;
 		this.email = email;
-		this.mobileNo=mobileNo;
 		this.password = password;
 	}
 
@@ -109,11 +109,12 @@ public class User {
 		this.isActive = isActive;
 	}
 
-	public String getMobileNo() {
-		return mobileNo;
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
 	}
+
 }

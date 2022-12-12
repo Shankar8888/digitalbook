@@ -11,13 +11,13 @@ import com.digitalbook.book.app.models.Subscription;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Integer>{
 
-	@Query("select count(s.id) from Subscription s where s.userId=?1 and s.bookId=?2")
+	@Query("select count(s.id) from Subscription s where s.userId=?1 and s.book.id=?2 and s.isCancelled=false")
 	public int findSubscriptionExists(int userId, int bookId);
 
-	@Query("select s.bookId from Subscription s where s.userId=?1")
+	@Query("select s.book.id from Subscription s where s.userId=?1 and s.isCancelled=false")
 	public List<Integer> findAllSubscribedBookIds(int userId);
 
-	@Query("select s from Subscription s where s.userId=?1 and s.id=?2")
+	@Query("select s from Subscription s where s.userId=?1 and s.id=?2 and s.isCancelled=false")
 	public Subscription findSubscriptionOfBook(int userId, int subscriptionId);
 
 }

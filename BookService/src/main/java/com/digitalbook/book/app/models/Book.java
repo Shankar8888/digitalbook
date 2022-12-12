@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(schema = "testdb", name = "books")
+@Table(schema = "testdb2", name = "books")
 public class Book {
 
 	@Id
@@ -45,6 +45,7 @@ public class Book {
 	@Column(name = "book_category")
 	private String category;
 	
+	@NotBlank
 	@Column(name = "book_content")
 	private String content;
 	

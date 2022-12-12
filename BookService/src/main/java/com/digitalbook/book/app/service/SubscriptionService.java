@@ -2,20 +2,21 @@ package com.digitalbook.book.app.service;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.digitalbook.book.app.exceptions.InvalidRequestException;
-import com.digitalbook.book.app.exceptions.RequestNotFoundException;
 import com.digitalbook.book.app.models.Book;
 import com.digitalbook.book.app.models.Subscription;
 import com.digitalbook.book.app.repository.BookRepository;
 import com.digitalbook.book.app.repository.SubscriptionRepository;
+import com.digitalbook.book.app.response.MasterResponseObject;
 import com.digitalbook.book.app.util.Util;
 
 @Service
@@ -30,102 +31,114 @@ public class SubscriptionService {
 	private BookRepository bookRepo;
 	
 	@Transactional
-	public Subscription subscribeBook(int userId, int bookId) {
+	public MasterResponseObject subscribeBook(int userId, int bookId) {
 		logger.info("Inside subscribeBook method in BookService");
+		Optional<Book> bookExist=bookRepo.findById(bookId);
+		if(bookExist.isEmpty()) {
+			return new MasterResponseObject("Book Not found in record..!",HttpStatus.NOT_FOUND);		
+		}else {
+			if(bookExist.get().getIsBlocked())
+			return new MasterResponseObject("Subscription requested Book Blocked by Author..!",HttpStatus.BAD_REQUEST);	
+		}
 		int bookSubscribed=subscrRepo.findSubscriptionExists(userId,bookId);
 		
 		if(bookSubscribed>0) {
-			throw new InvalidRequestException("Requested Book already Subscribed by user: "+userId);
+			return new MasterResponseObject("Requested Book already Subscribed by user: "+userId,HttpStatus.BAD_REQUEST);	
 		}
-		if(userId!=0 && bookId!=0) {
-			Subscription sub=new Subscription();
-			sub.setBookId(bookId);
-			sub.setUserId(userId);
-			sub.setCreatedDateTime(Util.getLocalDateTime());
-			sub=subscrRepo.save(sub);
-			return sub;
-		}
-		return null;
+		
+		Subscription subcrption=new Subscription();
+		
+			subcrption.setBook(bookExist.get());
+			subcrption.setUserId(userId);
+			subcrption.setCancelled(false);
+			subcrption.setSubscriptionDate(Util.getLocalDateTime());
+			subcrption=subscrRepo.save(subcrption);
+		return new MasterResponseObject(HttpStatus.CREATED,"Book subscribed..!",subcrption);
 	}
 
 
-	public List<Book> fetchAllSubscribedBooks(int userId) {
-		
+	public MasterResponseObject fetchAllSubscribedBooks(int userId) {
+		logger.info("Inside fetchAllSubscribedBooks method in SubscriptionService");
 		List<Book> findSubscribedBooks=null;
 		List<Integer> getAllBookIds=subscrRepo.findAllSubscribedBookIds(userId);
 		
 		if(getAllBookIds.size()==0 && getAllBookIds.isEmpty()) {
-			throw new RequestNotFoundException("Subscribed book not found..!");
+//			throw new RequestNotFoundException("Subscribed book not found..!");
+			return new MasterResponseObject("Subscription of book not found for user: "+userId,HttpStatus.NOT_FOUND);
 		}else {
-		    findSubscribedBooks=bookRepo.findAllById(getAllBookIds);
-		    if(findSubscribedBooks.size()==0 && getAllBookIds.isEmpty()) {
-				throw new RequestNotFoundException("Requested book not found..!");	
-			}
-		}
-		return findSubscribedBooks;
-	}
-
-
-	public Book fetchSubscribedBook(int userId, int subscriptionId) {
-		Book findBookBySubscrId=null;
-		Subscription subscription=subscrRepo.findSubscriptionOfBook(userId,subscriptionId);
-		
-		if(subscription==null) {
-			throw new RequestNotFoundException("Subscription of book not found..!");
-		}else {
-			findBookBySubscrId=bookRepo.findById(subscription.getBookId()).get();
-		    if(findBookBySubscrId==null) {
-				throw new RequestNotFoundException("Requested book not found..!");	
-			}
-		}
-		return findBookBySubscrId;
-	}
-	
-//	public Book fetchSubscribedBookContent(int userId, int subscriptionId) {
-//		Book findBookBySubscrId=null;
-//		Subscription subscription=subscrRepo.findSubscriptionOfBook(userId,subscriptionId);
-//		
-//		if(subscription==null) {
-//			throw new SubscriptionNotFoundException();
-//		}else {
-//			findBookBySubscrId=bookRepo.findById(subscription.getBookId()).get();
-//		    if(findBookBySubscrId==null) {
+			System.out.println(getAllBookIds);
+		    findSubscribedBooks=bookRepo.findAllBooksByIds(getAllBookIds);
+		    if(findSubscribedBooks.size()==0) {
 //				throw new RequestNotFoundException("Requested book not found..!");	
-//			}
-//		}
-//		return findBookBySubscrId;
-//	}
-	
-	public Book readSubscribedBook(int userId, int subscriptionId) {
+				return new MasterResponseObject("Requested subscribed books not found in records",HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new MasterResponseObject("fetched all Subscribed books..!",HttpStatus.OK,findSubscribedBooks);
+	}
+
+
+	public MasterResponseObject fetchSubscribedBook(int userId, int subscriptionId) {
+		logger.info("Inside fetchSubscribedBook method in SubscriptionService");
 		Book findBookBySubscrId=null;
 		Subscription subscription=subscrRepo.findSubscriptionOfBook(userId,subscriptionId);
 		
 		if(subscription==null) {
-			throw new RequestNotFoundException("Subscription of book not found..!");
+//			throw new RequestNotFoundException("Subscription of book not found..!");
+			return new MasterResponseObject("Subscription of book not found..!",HttpStatus.NOT_FOUND);
 		}else {
-			findBookBySubscrId=bookRepo.findById(subscription.getBookId()).get();
+			findBookBySubscrId=bookRepo.findById(subscription.getBook().getId()).get();
 		    if(findBookBySubscrId==null) {
-				throw new RequestNotFoundException("Requested book not found..!");	
+//				throw new RequestNotFoundException("Requested book not found..!");	
+		    	return new MasterResponseObject("Book not found in record..!",HttpStatus.NOT_FOUND);
+			}else {
+				if(findBookBySubscrId.getIsBlocked())
+				return new MasterResponseObject("Requested subscribed book blocked by author..!",HttpStatus.BAD_REQUEST);	
 			}
 		}
-		return findBookBySubscrId;
+		return new MasterResponseObject("Found record for subscription Id: "+subscriptionId,HttpStatus.OK,findBookBySubscrId);
+	}
+
+	public MasterResponseObject readSubscribedBook(int userId, int subscriptionId) {
+		logger.info("Inside readSubscribedBook method in SubscriptionService");
+		Book findBookBySubscrId=null;
+		Subscription subscription=subscrRepo.findSubscriptionOfBook(userId,subscriptionId);
+		
+		if(subscription==null) {
+//			throw new RequestNotFoundException("Subscription of book not found..!");
+			return new MasterResponseObject("Subscription of book not found..!",HttpStatus.NOT_FOUND);
+		}else {
+			findBookBySubscrId = bookRepo.findById(subscription.getBook().getId()).get();
+		    if(findBookBySubscrId==null) {
+//				throw new RequestNotFoundException("Requested book not found..!");	
+				return new MasterResponseObject("Requested book not found in records..!",HttpStatus.NOT_FOUND);
+			}else {
+				if(findBookBySubscrId.getIsBlocked())
+				return new MasterResponseObject("Requested subscribed book blocked by author..!",HttpStatus.BAD_REQUEST);	
+			}
+		}
+		return new MasterResponseObject("Found book for reading",HttpStatus.OK,findBookBySubscrId);
 	}
 
 
-	public Subscription cancelSubscription(int userId, int subscriptionId) {
-
+	@Transactional
+	public MasterResponseObject cancelSubscription(int userId, int subscriptionId) {
+		logger.info("Inside cancelSubscription method in SubscriptionService");
 		Subscription subscrFound=subscrRepo.findSubscriptionOfBook(userId, subscriptionId);
 		
 		if(subscrFound==null) {
-			throw new RequestNotFoundException("Subscription of book not found..!");
+			return new MasterResponseObject("Subscription of book not found..!",HttpStatus.NOT_FOUND);
+//			throw new RequestNotFoundException();
 		}else {
 			
-			long hours = ChronoUnit.HOURS.between(Util.getLocalDateTime(),subscrFound.getCreatedDateTime());
+			long hours = ChronoUnit.HOURS.between(Util.getLocalDateTime(),subscrFound.getSubscriptionDate());
 			if(hours <= 24) {
-				subscrRepo.delete(subscrFound);
-				return subscrFound;
+				subscrFound.setCancelled(true);
+				subscrFound.setDateOfCancellation(Util.getLocalDateTime());
+				subscrRepo.save(subscrFound);
+				return new MasterResponseObject("Subscription cancel request processed..!",HttpStatus.OK);
 			}else {
-				throw new InvalidRequestException("Subscription cancel request not proceeds..!");
+//				throw new InvalidRequestException("Subscription cancel request not proceeds..!");
+				return new MasterResponseObject("Subscription cancellation duration is over..!",HttpStatus.BAD_REQUEST);
 			}
 			}
 	}

@@ -1,11 +1,9 @@
-package com.digitalbook.user.app.dto;
+package com.digitalbook.book.app.response;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-public class BookResponse {
+public class BookWithoutContent {
 
 	private int id;
 	private String title;
@@ -16,10 +14,12 @@ public class BookResponse {
 	private byte[] logo;
 	private LocalDate publishedDate;
 
-	public BookResponse() {
+	public BookWithoutContent() {
 	}
 
-	public BookResponse(int id, String title, String author, String publisher, String category, double price,
+	
+
+	public BookWithoutContent(int id, String title, String author, String publisher, String category, double price,
 			byte[] logo, LocalDate publishedDate) {
 		super();
 		this.id = id;
@@ -31,6 +31,8 @@ public class BookResponse {
 		this.logo = logo;
 		this.publishedDate = publishedDate;
 	}
+
+
 
 	public int getId() {
 		return id;
