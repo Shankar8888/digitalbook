@@ -22,6 +22,8 @@ import com.digitalbook.book.app.response.BookWithoutContent;
 import com.digitalbook.book.app.response.MasterResponseObject;
 import com.digitalbook.book.app.util.Util;
 
+import net.bytebuddy.implementation.bind.annotation.Default;
+
 
 @Service
 public class BookService {
@@ -76,13 +78,13 @@ public class BookService {
 	}
 	
 	
-	public MasterResponseObject searchBook(boolean blockStatus, String title, String author, String category, String publisher, double price) {
+	public MasterResponseObject searchBook(String title, String author, String category, String publisher, Double price) {
 		logger.info("Inside searchBook method in BookService");
 		
 			List<BookWithoutContent> bookResponse=new ArrayList();
-		    List<Book> bookResult= bookRepo.findBookByFilters(blockStatus,title, author, category, publisher, price);
+		    List<Book> bookResult= bookRepo.findBookByFilters(title, author, category, publisher, price);
 		    if(bookResult.size()==0) {
-		    	 return new MasterResponseObject("Requested book not found in records..!",HttpStatus.NOT_FOUND);
+		    	 return new MasterResponseObject("No result found in records..!",HttpStatus.OK);
 			 }else {
 			
 		for(Book book:bookResult) {
@@ -91,7 +93,6 @@ public class BookService {
 			}
 		return new MasterResponseObject(HttpStatus.OK,bookResponse);
 		}
-//			return bookResponse;
 	}
 
 	@Transactional
@@ -102,12 +103,15 @@ public class BookService {
 		if(bookFound>0) {
 			return new MasterResponseObject("Requested Book already Exists with Title:"+book.getTitle()+" and Author:"+book.getAuthor(),HttpStatus.BAD_REQUEST);
 		}
-		if(book.getId()==0) {
+	
 			book.setIsBlocked(false);
 			book.setCreatedDateTime(Util.getLocalDateTime());
-		}
-			 book=bookRepo.save(book);
-			return new MasterResponseObject("Book saved Successfully..!", HttpStatus.CREATED, book);
+			if(book.getPublishedDate()==null) {
+				book.setPublishedDate(Util.getLocalDate());
+			}
+			book=bookRepo.save(book);
+			
+			return new MasterResponseObject("Book was created with bookId :" +book.getId(),HttpStatus.CREATED);
 	}
 	
 	@Transactional
@@ -119,11 +123,14 @@ public class BookService {
 			if(bookExists.isEmpty()) {
 				return new MasterResponseObject("Requested book not found in records..!", HttpStatus.NOT_FOUND);
 			}else {
+				if(!(bookExists.get().getAuthor().equalsIgnoreCase(book.getAuthor()) && (bookExists.get().getId()==bookId))) {
+				return new MasterResponseObject("You can't update this book. because Book id:"+bookId+" is not belongs to you!", HttpStatus.BAD_REQUEST);	
+				}
 			book= Book.setExistingBookValues(book,bookExists.get());
 			}
 		}
 			book=bookRepo.save(book);
-			return new MasterResponseObject("Updated Book..!",HttpStatus.OK,book);
+			return new MasterResponseObject("Book Updated Successfully..!",HttpStatus.OK,book);
 	}
 
 	@Transactional
@@ -141,6 +148,17 @@ public class BookService {
 		}
 		}
 		
+	}
+
+	public MasterResponseObject getBooksByAuthor(String authorName) {
+		List<Book> books=bookRepo.getBooksByAuthor(authorName);
+		 
+		 if(books.size()==1) {
+			 return new MasterResponseObject("Books not found in record..!",HttpStatus.OK);
+		 }else {
+//			bookResponse=new ModelMapper().map(book.get(),BookWithoutContent.class);
+		return new MasterResponseObject("found Books",HttpStatus.OK,books);
+		 }
 	}
 
 }

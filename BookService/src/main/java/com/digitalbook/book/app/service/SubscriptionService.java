@@ -3,6 +3,8 @@ package com.digitalbook.book.app.service;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -53,27 +55,29 @@ public class SubscriptionService {
 			subcrption.setCancelled(false);
 			subcrption.setSubscriptionDate(Util.getLocalDateTime());
 			subcrption=subscrRepo.save(subcrption);
-		return new MasterResponseObject(HttpStatus.CREATED,"Book subscribed..!",subcrption);
+		return new MasterResponseObject("Book subscribed with SubscriptionId: "+subcrption.getId(),HttpStatus.CREATED);
 	}
 
 
 	public MasterResponseObject fetchAllSubscribedBooks(int userId) {
 		logger.info("Inside fetchAllSubscribedBooks method in SubscriptionService");
-		List<Book> findSubscribedBooks=null;
-		List<Integer> getAllBookIds=subscrRepo.findAllSubscribedBookIds(userId);
+		List<Subscription> findSubscrUnblockedBooks=null;
+		List<Subscription> getAllSubscriptions=subscrRepo.findAllSubscribedBookIds(userId);
 		
-		if(getAllBookIds.size()==0 && getAllBookIds.isEmpty()) {
+		if(getAllSubscriptions.size()==0 && getAllSubscriptions.isEmpty()) {
 //			throw new RequestNotFoundException("Subscribed book not found..!");
-			return new MasterResponseObject("Subscription of book not found for user: "+userId,HttpStatus.NOT_FOUND);
-		}else {
-			System.out.println(getAllBookIds);
-		    findSubscribedBooks=bookRepo.findAllBooksByIds(getAllBookIds);
-		    if(findSubscribedBooks.size()==0) {
-//				throw new RequestNotFoundException("Requested book not found..!");	
-				return new MasterResponseObject("Requested subscribed books not found in records",HttpStatus.BAD_REQUEST);
+			return new MasterResponseObject("Book Subscription not found for current user..!",HttpStatus.NOT_FOUND);
+		}
+		else {
+//			System.out.println(getAllBookIds);
+//		    findSubscribedBooks=bookRepo.findAllBooksByIds(getAllBookIds);
+			findSubscrUnblockedBooks=getAllSubscriptions.stream().filter(a->a.getBook().getIsBlocked()==false).collect(Collectors.toList());
+		    if(findSubscrUnblockedBooks.size()==0) {
+////				throw new RequestNotFoundException("Requested book not found..!");	
+				return new MasterResponseObject("Requested subscribed book either not found or blocked in records..!",HttpStatus.BAD_REQUEST);
 			}
 		}
-		return new MasterResponseObject("fetched all Subscribed books..!",HttpStatus.OK,findSubscribedBooks);
+		return new MasterResponseObject(findSubscrUnblockedBooks,HttpStatus.OK);
 	}
 
 
@@ -113,7 +117,7 @@ public class SubscriptionService {
 				return new MasterResponseObject("Requested book not found in records..!",HttpStatus.NOT_FOUND);
 			}else {
 				if(findBookBySubscrId.getIsBlocked())
-				return new MasterResponseObject("Requested subscribed book blocked by author..!",HttpStatus.BAD_REQUEST);	
+				return new MasterResponseObject("Requested subscribedId: "+subscriptionId+" blocked by author..!",HttpStatus.BAD_REQUEST);	
 			}
 		}
 		return new MasterResponseObject("Found book for reading",HttpStatus.OK,findBookBySubscrId);
@@ -126,7 +130,7 @@ public class SubscriptionService {
 		Subscription subscrFound=subscrRepo.findSubscriptionOfBook(userId, subscriptionId);
 		
 		if(subscrFound==null) {
-			return new MasterResponseObject("Subscription of book not found..!",HttpStatus.NOT_FOUND);
+			return new MasterResponseObject("SubscriptionId: "+subscriptionId+" not found in record..!",HttpStatus.NOT_FOUND);
 //			throw new RequestNotFoundException();
 		}else {
 			
@@ -135,7 +139,7 @@ public class SubscriptionService {
 				subscrFound.setCancelled(true);
 				subscrFound.setDateOfCancellation(Util.getLocalDateTime());
 				subscrRepo.save(subscrFound);
-				return new MasterResponseObject("Subscription cancel request processed..!",HttpStatus.OK);
+				return new MasterResponseObject("Subscription cancel for SubscrptionId: "+subscriptionId,HttpStatus.OK);
 			}else {
 //				throw new InvalidRequestException("Subscription cancel request not proceeds..!");
 				return new MasterResponseObject("Subscription cancellation duration is over..!",HttpStatus.BAD_REQUEST);

@@ -1,0 +1,74 @@
+<div>
+    <div id="outer-div" *ngIf="!isSuccessful">
+        <!-- <u><h2>Subscribed Books</h2></u> -->
+    <!-- <b>Book Title:</b><br><input type="text" [(ngModel)]="search.title" name="title">
+        <br><br>
+    <b>Book Author:</b> <br><input type="text" [(ngModel)]="search.author" name="author">
+    <br><br>
+    <b>Publisher:</b> <br><input type="text" [(ngModel)]="search.publisher" name="publisher">
+    <br><br>
+    <b>Category:</b> <br><input type="text" [(ngModel)]="search.category" name="category">
+    <br><br>
+    <b>Price:</b> <br><input type="number" [(ngModel)]="search.price" name="price">
+    <br><br> -->
+    <!-- <button id="subscr-btn" (click)="subscribeBook()">Subscribe New Book</button> -->
+    <button id="subscr-btn" (click)="subscribedBooks()">Show My Subscribed Books</button>
+    </div>
+
+    <div *ngIf="isSuccessful">
+        <h3>Found Subscribed Books:</h3>
+        <table>
+            <tr>
+                <th>SubscriptionId</th>
+                <th>UserID</th>
+                <th>BookId</th>
+                <th>Title</th> 
+                <th>Author</th> 
+                <th>Publisher</th>  
+                <th>Category</th>
+                <th>Price</th>
+            </tr>
+            </table>
+    <div *ngFor="let subscription of content">
+    <table>
+    <tr>
+        <td>{{subscription.id}}</td>
+        <td>{{subscription.userId}}</td>
+        <td>{{subscription.book.id}}</td>
+        <td>{{subscription.book.title}}</td>
+        <td>{{subscription.book.author}}</td>
+        <td>{{subscription.book.publisher}}</td>
+        <td>{{subscription.book.category}}</td>
+        <td>{{subscription.book.price}}</td>
+        <td><button id='unSubscr-btn' (click)='unsubscribeBook(subscription.userId,subscription.id)'>Unsubscribe</button></td>
+        <td><button id='readBook-btn' (click)='readBook(subscription.userId,subscription.id)'>Read Book</button></td>
+    </tr>
+    </table>
+    </div>
+</div>
+
+    <div class="alert alert-danger" *ngIf="isSubscrFoundFailed">
+         <h3 id="h3-err">{{ errorMessage }}</h3>
+      </div>
+
+      <div class="alert alert-success" *ngIf="!isCancelSubscrFailed && isSuccessful">
+       <h3 id="h3-success">{{ successMsg }}</h3>  
+      </div>
+      <div class="alert alert-danger" *ngIf="isCancelSubscrFailed">
+       <h3 id="h3-err">{{ errorMessage }}</h3>
+      </div>
+
+      <div *ngIf="!isReadBookFailed && isSuccessful" class="alert alert-success">
+      <h3 id="h3-success">{{ this.bookObj.content }}</h3>  
+     </div>
+
+     <div class="alert alert-danger" *ngIf="isReadBookFailed">
+        <h3 id="h3-err"> {{ errorMessage }}</h3>
+     </div>
+    
+    </div>
+    
+    
+    
+    
+    

@@ -4,16 +4,29 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class Book {
 
 	private int id;
+	
+	@NotBlank(message = "Book Title is required")
 	private String title;
+	
+	@NotBlank(message = "Book Author is required")
 	private String author;
+	
+	@NotBlank(message = "Publisher is required")
 	private String publisher;
 	private String category;
+	
+	@NotNull(message = "Book Price is required")
 	private double price;
+	
+	@NotBlank(message = "Book Content is required")
 	private String content;
-	private String createdBy;
 	private LocalDate publishedDate;
 	private LocalDateTime createdDateTime;
 	private Boolean isBlocked;
@@ -25,7 +38,7 @@ public class Book {
 	
 	
 	public Book(int id, String title, String author, String publisher, String category, double price, String content,
-			String createdBy, LocalDate publishedDate, LocalDateTime createdDateTime, Boolean isBlocked, byte[] logo) {
+			LocalDate publishedDate, LocalDateTime createdDateTime, Boolean isBlocked, byte[] logo) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -34,7 +47,6 @@ public class Book {
 		this.category = category;
 		this.price = price;
 		this.content = content;
-		this.createdBy = createdBy;
 		this.publishedDate = publishedDate;
 		this.createdDateTime = createdDateTime;
 		this.isBlocked = isBlocked;
@@ -84,12 +96,6 @@ public class Book {
 	}
 	public void setContent(String content) {
 		this.content = content;
-	}
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
 	}
 	public LocalDate getPublishedDate() {
 		return publishedDate;
@@ -142,7 +148,7 @@ public class Book {
 	@Override
 	public String toString() {
 		return "BookDTO [id=" + id + ", title=" + title + ", author=" + author + ", publisher=" + publisher
-				+ ", category=" + category + ", price=" + price + ", content=" + content + ", createdBy=" + createdBy
+				+ ", category=" + category + ", price=" + price + ", content=" + content 
 				+ ", publishedDate=" + publishedDate + ", createdDateTime=" + createdDateTime + ", isBlocked="
 				+ isBlocked + ", logo=" + Arrays.toString(logo) + "]";
 	}

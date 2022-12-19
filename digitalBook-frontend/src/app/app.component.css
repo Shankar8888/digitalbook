@@ -1,0 +1,31 @@
+#app{
+    background-image: url("../assets/images/background.png");
+    background-size: 100%;
+    min-height: 1024px;
+    
+    }
+    
+    .holder {
+        padding:0.5rem;
+        overflow: hidden;
+        color: red;
+      }
+      .message {
+        animation : slide 20s linear infinite;
+        
+      }
+      
+      @keyframes slide {
+        0% {
+          transform: translatex(0%)
+        }
+      
+        100% {
+          transform: translatex(100%)
+        }
+
+      }
+table,tr,td{
+  border: 1px solid black;
+}
+      

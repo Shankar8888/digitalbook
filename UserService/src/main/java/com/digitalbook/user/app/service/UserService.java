@@ -24,7 +24,7 @@ public class UserService {
 	@Autowired
 	RestTemplate restTemplate;
 	
-	public MasterResponseObject searchBook(String title, String author, String category, String publisher, double price) {
+	public MasterResponseObject searchBook(String title, String author, String category, String publisher, Double price) {
 		    return restTemplate.getForObject(bookBaseUrl
 					+ "/books/search?title={title}&author={author}&category={category}&publisher={publisher}&price={price}",
 					MasterResponseObject.class, title, author, category, publisher, price);

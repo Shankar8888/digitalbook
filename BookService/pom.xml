@@ -10,7 +10,6 @@
 	</parent>
 	<groupId>com.digitalbook.book</groupId>
 	<artifactId>BookService</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>BookService</name>
 	<description>Demo project for Digitalbook</description>
 	
@@ -47,6 +46,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger2</artifactId>
+    <version>3.0.0</version>
+</dependency>
 		<!-- <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>

@@ -1,25 +1,34 @@
 <div id="app">
   <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a href="#" class="navbar-brand">DigitalBook</a>
+    <a href="/home" class="navbar-brand">DigitalBook</a>
     <ul class="navbar-nav mr-auto" routerLinkActive="active">
       <li class="nav-item">
         <a href="/home" class="nav-link" routerLink="home">Home </a>
       </li>
-      <li class="nav-item">
-        <a href="/search" class="nav-link" routerLink="home">Search Book</a>
+      <li class="nav-item" >
+        <a href="/search" class="nav-link" routerLink="search">SearchBook</a>
+        </li>
+        <li class="nav-item" *ngIf="showAuthorBoard">
+        <a href="/createbook" class="nav-link" routerLink="createbook">CreateBook</a>
       </li>
-      <!-- <li class="nav-item" *ngIf="showAdminBoard">
-        <a href="/admin" class="nav-link" routerLink="admin">Admin Board</a>
+      <li class="nav-item" *ngIf="showReaderBoard">
+        <a href="/subscribebook" class="nav-link" routerLink="subscribebook">Subscribe Book</a>
       </li>
-      <li class="nav-item" *ngIf="showModeratorBoard">
-        <a href="/mod" class="nav-link" routerLink="mod">Moderator Board</a>
+      <li class="nav-item" *ngIf="showReaderBoard">
+        <a href="/subscribedbooks" class="nav-link" routerLink="subscribedbooks">Book Subscriptions</a>
       </li>
-      <li class="nav-item">
-        <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="user">User</a>
-      </li> -->
     </ul>
 
     <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+      <li class="nav-item" *ngIf="showAuthorBoard">
+        <a href="/createbook" class="nav-link" routerLink="#">CreatedBooks</a>
+      </li>
+      <li class="nav-item" *ngIf="showReaderBoard">
+        <a href="/subscribebook" class="nav-link" routerLink="subscribebook">SubscribeBook</a>
+      </li>
+      <li class="nav-item" *ngIf="showReaderBoard">
+        <a href="/subscribedbook" class="nav-link" routerLink="#">SubscribedBooks</a>
+      </li>
       <li class="nav-item">
         <a href="/register" class="nav-link" routerLink="register">Sign Up</a>
       </li>
@@ -37,7 +46,9 @@
       </li>
     </ul>
   </nav>
-
+   <div class="holder" *ngIf="!isLoggedIn">
+    <!-- <div class="message"><b>Please Login to take any Action...!!</b></div> -->
+  </div> 
   <div class="container">
     <router-outlet></router-outlet>
   </div>

@@ -45,6 +45,13 @@ public class BookController {
 		return bookService.getBookById(bookId);
 	}
 	
+	@GetMapping("/{author}")
+	public MasterResponseObject getBookByAuthor(@PathVariable("author") String authorName) {
+		logger.info("Inside getBookById method in BookController");
+
+		return bookService.getBooksByAuthor(authorName);
+	}
+	
 	@DeleteMapping("/{book-id}")
 	public MasterResponseObject DeleteBookById(@PathVariable("book-id") int bookId) {
 		logger.info("Inside DeleteBookById method in BookController");
@@ -54,10 +61,10 @@ public class BookController {
 	
 	@GetMapping("/search")
 	public MasterResponseObject searchBook(@RequestParam String title,@RequestParam String author,
-			@RequestParam String category,@RequestParam String publisher,@RequestParam double price) {
+			@RequestParam String category,@RequestParam String publisher,@RequestParam Double price) {
 		logger.info("Inside searchBook method in BookController");
 
-		return bookService.searchBook(false,title,author,category,publisher,price);
+		return bookService.searchBook(title,author,category,publisher,price);
 
 	}
 	

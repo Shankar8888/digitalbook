@@ -20,12 +20,24 @@ public class MasterResponseObject {
 	private Subscription subscription;
 	private List<BookWithoutContent> bookResponseList;
 	private BookWithoutContent bookResponse;
-	
+//	private int id;
 
+//	public int getId() {
+//		return id;
+//	}
+//	public void setId(int id) {
+//		this.id = id;
+//	}
 	public MasterResponseObject() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+//	public MasterResponseObject(HttpStatus status, int id) {
+//		super();
+//		this.status = status;
+//		this.id = id;
+//	}
 	public MasterResponseObject(String message, HttpStatus status, Book book) {
 		super();
 		
@@ -54,10 +66,9 @@ public class MasterResponseObject {
 		this.bookList = bookList;
 	}
 
-	public MasterResponseObject(HttpStatus status,String message,List<Subscription> subscriptionList) {
+	public MasterResponseObject(List<Subscription> subscriptionList,HttpStatus status) {
 		super();
 		this.status = status;
-		this.message = message;
 		this.subscriptionList = subscriptionList;
 	}
 	public MasterResponseObject(HttpStatus status,List<BookWithoutContent> bookResponseList) {

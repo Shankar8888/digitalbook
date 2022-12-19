@@ -1,0 +1,52 @@
+<div id="backgroud">
+<div id="outer-div" *ngIf="!isSuccess">
+    <u><h2>Search Book</h2></u>
+<b>Title:</b><br><input type="text" [(ngModel)]="search.title" name="title">
+    <br><br>
+<b>Author:</b> <br><input type="text" [(ngModel)]="search.author" name="author">
+<br><br>
+<b>Publisher:</b> <br><input type="text" [(ngModel)]="search.publisher" name="publisher">
+<br><br>
+<b>Category:</b> <br><input type="text" [(ngModel)]="search.category" name="category">
+<br><br>
+<b>Price:</b> <br><input type="number" [(ngModel)]="search.price" name="price">
+<br><br>
+<button (click)="searchBook()">Search Book</button>
+</div>
+<div *ngIf="isSuccess">
+    <h3>Books Found:</h3>
+    <table id="search-tbl">
+        <tr>
+            <th>BookId</th>
+            <th>Title</th> 
+            <th>Author</th> 
+            <th>Publisher</th>  
+            <th>Category</th>
+            <th>Price</th>
+        </tr> </table>
+<div *ngFor="let book of content">
+    <table id="search-tbl">
+<!-- <tr>
+    <th>BookId</th>
+    <th>Title</th> 
+    <th>Author</th> 
+    <th>Publisher</th>  
+    <th>Category</th>
+    <th>Price</th>
+</tr> -->
+<tr id="tr">
+    <td>{{book.id}}</td>
+    <td>{{book.title}}</td>
+    <td>{{book.author}}</td>
+    <td>{{book.publisher}}</td>
+    <td>{{book.category}}</td>
+    <td>{{book.price}}</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+
+
+
+

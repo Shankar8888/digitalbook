@@ -82,9 +82,9 @@ public class UserController {
 	}
 
 	@GetMapping("/search")
-	@PreAuthorize("hasRole('READER') or hasRole('AUTHOR') or hasRole('GUEST')")
+//	@PreAuthorize("hasRole('READER') or hasRole('AUTHOR') or hasRole('GUEST')")
 	public ResponseEntity<?> searchBook(@RequestParam String title, @RequestParam String author,
-			@RequestParam String category, @RequestParam String publisher, @RequestParam double price) {
+			@RequestParam String category, @RequestParam String publisher, @RequestParam Double price) {
 		logger.info("Inside searchBook method in BookController");
 		MasterResponseObject response = null;
 		try {
@@ -124,6 +124,7 @@ public class UserController {
 			response = userService.saveBook(book);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ResponseEntity.status(response.getStatus()).body(e.getLocalizedMessage());
 		}
 		return ResponseEntity.status(response.getStatus()).body(response);
 

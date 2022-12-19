@@ -1,0 +1,49 @@
+/* #background{
+  background-image: url("/src/assets/images/background.png");
+} */
+input{
+  width: 90%;
+  padding: 5px;
+}
+#outer-div{
+  
+  margin-top: 50px;
+  margin-left: 33%;
+    width: 380px;  
+    overflow: hidden;  
+    /* margin: auto;   */
+    /* margin: 20 10 10 450px;   */
+    padding: 20px 25px 30px;  
+    background: whitesmoke;  
+    border-radius: 15px ; 
+}
+
+button {
+    display:inline-block;
+    padding:10px 20px;
+    background-color: #08b74b;
+    font-size:17px;
+    border:none;
+    border-radius:5px;
+    color:#bcf5e7;
+    cursor:pointer;
+    align-items: auto;
+    align-self: auto;
+ }
+ button:hover {
+    background-color: #169c7b;
+    color:white;
+  }
+
+ table {
+    border: 1px solid black;
+    table-layout: fixed;
+    width: 200px;
+  }
+  
+  th,
+  td {
+    border: 1px solid black;
+    width: 100px;
+    overflow: hidden;
+  }
