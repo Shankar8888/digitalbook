@@ -21,7 +21,7 @@ export class CreatebookComponent implements OnInit {
    logo:null
   };
 
-  content?:any;
+  successMsg?:any;
   isSuccess=false;
   isCreateBookFailed = false;
   errorMessage?:string;
@@ -31,21 +31,21 @@ export class CreatebookComponent implements OnInit {
     ngOnInit(): void {
    }
 
-   createBook(): void {
+   public createBook(): void {
     const { title,author,publisher,category,
-      price,content,
-      publishedDate,logo} = this.form;
+      price,content, publishedDate,logo} = this.form;
 
     this.userService.getCreatedBooks(title,author,publisher,category,
       price,content,publishedDate,logo).subscribe(
       data => {
         console.log(data);
-        this.content=data;
+        console.log(Object.values(data));
+        this.successMsg=Object.values(data);
         this.isSuccess = true;
         this.isCreateBookFailed=false;
       },
       err => {
-        this.errorMessage = JSON.parse(err.error).message;
+        this.errorMessage = err.error.message;
         // this.isSuccess = false;
         this.isCreateBookFailed=true;
       }

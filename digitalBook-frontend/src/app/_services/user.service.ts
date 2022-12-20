@@ -7,7 +7,7 @@ const API_URL ='https://c6en53f5tf.execute-api.us-east-1.amazonaws.com/UAT/digit
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin' : '*',responseType: 'text'})
+  'responseType': 'text'})
 };
 
 @Injectable({
@@ -49,9 +49,9 @@ export class UserService {
     author:string,
     publisher:string,
     category:string,
-    price:DoubleRange,
+    price:number,
     content:string,
-    publishedDate:Date,logo:string){
+    publishedDate:Date,logo:string) : Observable<any>{
     return this.http.post(API_URL + 'save', {
       title,
       author,
@@ -59,7 +59,7 @@ export class UserService {
       category,
       price,
       content,
-      publishedDate,logo}, httpOptions);
+      publishedDate,logo});
   }
 
   getSubscriptions(id: number) {
@@ -80,8 +80,6 @@ export class UserService {
   }
 
   subscribeBook(userId:number, bookId:number) {
-    return this.http.post(API_URL + 'reader/'+userId+'/'+bookId, "{}", {
-   responseType: 'text'
-    });
+    return this.http.post(API_URL + 'reader/'+userId+'/'+bookId, "", {responseType: 'text'});
   }
 }

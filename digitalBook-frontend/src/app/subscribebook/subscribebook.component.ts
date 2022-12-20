@@ -37,7 +37,7 @@ export class SubscribebookComponent implements OnInit {
       err => {
         console.log(err.error.message);
         // this.content = err.error.message;
-        this.errorMessage = JSON.parse(err.error).message;
+        this.errorMessage = err.error.message;
         this.isSubscrFailed=true;
 
   
@@ -59,7 +59,7 @@ export class SubscribebookComponent implements OnInit {
       err => {
         console.log(err.error.message);
         // this.content = err.error.message;
-        this.errorMessage = JSON.parse(err.error).message;
+        this.errorMessage = err.error.message;
         this.isSubscrFailed=true;
       }
     );

@@ -84,7 +84,7 @@ public class BookService {
 			List<BookWithoutContent> bookResponse=new ArrayList();
 		    List<Book> bookResult= bookRepo.findBookByFilters(title, author, category, publisher, price);
 		    if(bookResult.size()==0) {
-		    	 return new MasterResponseObject("No result found in records..!",HttpStatus.OK);
+		    	 return new MasterResponseObject("No result found for search request..!",HttpStatus.NOT_FOUND);
 			 }else {
 			
 		for(Book book:bookResult) {

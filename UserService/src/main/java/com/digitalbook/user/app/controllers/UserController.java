@@ -191,8 +191,6 @@ public class UserController {
 			response = userService.fetchAllSubscribedBooks(userId);
 		} catch (Exception e) {
 			e.printStackTrace();
-//			response.setMessage("Only Reader can fetch subscibed book");
-//			response.setStatus(HttpStatus.FORBIDDEN);
 		}
 		return ResponseEntity.status(response.getStatus()).body(response);
 

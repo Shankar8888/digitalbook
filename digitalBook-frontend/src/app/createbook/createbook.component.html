@@ -128,7 +128,7 @@
         <div class="form-group">
             <label for="logo">Logo</label>
             <input
-              type="file"
+              type="text"
               class="form-control"
               name="logo"
               [(ngModel)]="form.logo"
@@ -145,8 +145,8 @@
         </div>
       </form>
   
-      <div class="alert alert-success" *ngIf="isSuccess">
-        <h3>{{this.content.message}}</h3>
+      <div class="alert alert-success" *ngIf="isSuccess && !isCreateBookFailed">
+        <h3>{{ this.successMsg[0]}}</h3>
       </div>
     </div>
   </div>

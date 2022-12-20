@@ -42,7 +42,7 @@ export class SubscribedbooksComponent implements OnInit {
       err => {
         console.log(err.error.message);
         // this.content = err.error.message;
-        this.errorMessage = JSON.parse(err.error).message;
+        this.errorMessage = err.error.message;
         this.isSubscrFoundFailed=true;
 
       }
@@ -61,7 +61,7 @@ export class SubscribedbooksComponent implements OnInit {
       err => {
         console.log(err);
         this.isCancelSubscrFailed=true;
-        this.errorMessage = JSON.parse(err.error).message;
+        this.errorMessage = err.error.message;
       }
     );
   }
@@ -80,7 +80,7 @@ export class SubscribedbooksComponent implements OnInit {
         console.log(err);
         // this.content = err.error.message;
         this.isReadBookFailed=true;
-        this.errorMessage = JSON.parse(err.error).message;
+        this.errorMessage = err.error.message;
       }
     );
   }

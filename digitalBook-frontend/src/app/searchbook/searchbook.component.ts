@@ -34,7 +34,7 @@ export class SearchbookComponent implements OnInit {
         this.isSuccess=true;
       },
       err => {
-        this.content = JSON.parse(err.error).message;
+        this.content = err.error.message;
       }
     );
   }
