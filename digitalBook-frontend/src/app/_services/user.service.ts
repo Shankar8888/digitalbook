@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:8081/digitalbooks/';
+// const API_URL = 'http://localhost:8081/digitalbooks/';
+const API_URL ='https://c6en53f5tf.execute-api.us-east-1.amazonaws.com/UAT/digitalbooks/';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' ,responseType: 'text'})
+  headers: new HttpHeaders({ 'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin' : '*',responseType: 'text'})
 };
 
 @Injectable({
@@ -50,7 +52,7 @@ export class UserService {
     price:DoubleRange,
     content:string,
     publishedDate:Date,logo:string){
-    return this.http.post(API_URL + 'saveBooks', {
+    return this.http.post(API_URL + 'save', {
       title,
       author,
       publisher,

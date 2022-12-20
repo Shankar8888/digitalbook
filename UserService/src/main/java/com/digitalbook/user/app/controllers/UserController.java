@@ -113,7 +113,7 @@ public class UserController {
 //	}
 
 	// save book
-	@PostMapping(value = "/saveBooks")
+	@PostMapping(value = "/save")
 	@PreAuthorize("hasRole('AUTHOR')")
 	public ResponseEntity<?> saveBook(@Valid @RequestBody Book book)
 			throws MethodArgumentNotValidException, IOException {
