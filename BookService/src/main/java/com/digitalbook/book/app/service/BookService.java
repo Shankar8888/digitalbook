@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,7 @@ public class BookService {
 	}
 	
 	@Transactional
+	@Modifying
 	public MasterResponseObject DeleteBookById(int bookId) {
 		 Optional<Book> book=bookRepo.findById(bookId);
 		 
@@ -71,10 +73,8 @@ public class BookService {
 			 return new MasterResponseObject("Requested book not found in records..!",HttpStatus.NOT_FOUND);
 		 }else {
 		 bookRepo.deleteById(bookId);
-		 return new MasterResponseObject("Requested book deleted successfully..!",HttpStatus.OK, book.get());
+		 return new MasterResponseObject("Requested book deleted successfully..!",HttpStatus.OK);
 		 }
-		 
-		 
 	}
 	
 	
@@ -111,7 +111,7 @@ public class BookService {
 			}
 			book=bookRepo.save(book);
 			
-			return new MasterResponseObject("Book was created with bookId :" +book.getId(),HttpStatus.CREATED);
+			return new MasterResponseObject("Book is created with bookId :" +book.getId(),HttpStatus.CREATED);
 	}
 	
 	@Transactional
@@ -140,6 +140,9 @@ public class BookService {
 		if(bookExists.isEmpty()) {
 			return new MasterResponseObject("Requested book not found in records..!", HttpStatus.NOT_FOUND);
 		}else {
+			if(isblocked==(bookExists.get().getIsBlocked())){
+				return new MasterResponseObject("Book Blocked Status already : "+isblocked, HttpStatus.BAD_REQUEST);	
+			}
 		bookRepo.updateForBookBlocked(bookId, isblocked);
 		if(isblocked) {
 		return new MasterResponseObject("Successfully Blocked book for book id: "+bookId, HttpStatus.OK);
@@ -150,14 +153,14 @@ public class BookService {
 		
 	}
 
-	public MasterResponseObject getBooksByAuthor(String authorName) {
-		List<Book> books=bookRepo.getBooksByAuthor(authorName);
+	public MasterResponseObject getBooksByAuthor(String authorId) {
+		List<Book> books=bookRepo.getBooksByAuthor(authorId);
 		 
-		 if(books.size()==1) {
-			 return new MasterResponseObject("Books not found in record..!",HttpStatus.OK);
+		 if(books.isEmpty() && books.size()==0) {
+			 return new MasterResponseObject("Books not found in record..!",HttpStatus.NOT_FOUND);
 		 }else {
 //			bookResponse=new ModelMapper().map(book.get(),BookWithoutContent.class);
-		return new MasterResponseObject("found Books",HttpStatus.OK,books);
+		return new MasterResponseObject("Books Found",HttpStatus.OK,books);
 		 }
 	}
 

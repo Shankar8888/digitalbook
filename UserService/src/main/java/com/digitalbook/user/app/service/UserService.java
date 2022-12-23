@@ -91,5 +91,11 @@ public class UserService {
 				MasterResponseObject.class, userId, subscriptionId);
 	}
 
+	public MasterResponseObject getBooksByAuthor(String authorId) {
+		// TODO Auto-generated method stub
+		return  restTemplate.getForObject(bookBaseUrl + "/books/author/{author-id}/books",
+				MasterResponseObject.class,authorId);
+	}
+
 	
 }

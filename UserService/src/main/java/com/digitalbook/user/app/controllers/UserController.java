@@ -245,5 +245,20 @@ public class UserController {
 		return ResponseEntity.status(response.getStatus()).body(response);
 
 	}
+	
+	// get all books by author
+		@PreAuthorize("hasRole('AUTHOR')")
+		@GetMapping(value = "/author/{author-id}/books")
+		public ResponseEntity<MasterResponseObject> getBooksByAuthor(@PathVariable("author-id") String authorId) {
+			logger.info("Inside getBooksByAuthor method in UserController");
+			MasterResponseObject response = null;
+			try {
+				response = userService.getBooksByAuthor(authorId);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return ResponseEntity.status(response.getStatus()).body(response);
+
+		}
 
 }

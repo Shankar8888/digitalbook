@@ -1,0 +1,61 @@
+<div>
+    <!-- <div id="outer-div" *ngIf="!isSuccess">
+    <button (click)="ShowMyBooks()">ShowMyBooks</button>
+    </div> -->
+    <div *ngIf="!isSearchFailed">
+        <h3 id="h3">Books Found:</h3>
+        <table>
+            <tr>
+                <th>BookId</th>
+                <th>Title</th>  
+                <th>Publisher</th>  
+                <th>Category</th>
+                <th>Price</th>
+                <th>Published Date</th>
+                <th>Blocked Status</th>
+            </tr> </table>
+    <div *ngFor="let book of booksList">
+        <table>
+        <tr>
+        <td>{{book.id}}</td>
+        <td>{{book.title}}</td>
+        <td>{{book.publisher}}</td>
+        <td>{{book.category}}</td>
+        <td>{{book.price}}</td>
+        <td>{{book.publishedDate}}</td>
+        <td>{{book.isBlocked}}</td>
+        <td *ngIf="!book.isBlocked">
+        <button  id='block-btn' (click)='blockBook(book.id)'>Block Book</button></td>
+        <td *ngIf="book.isBlocked">
+        <button  id='unblock-btn' (click)='unBlockBook(book.id)'>UnBlock Book</button>
+        </td>
+
+        <!-- <td><button  id='delete-btn' (click)='deleteBook(book.id)'>Delete Book</button></td> -->
+    </tr>
+    </table>
+    </div>
+    </div>
+    <div id="error-div" *ngIf="isSearchFailed">
+        <h3> Error: {{ errorMessage }} </h3>
+       </div>
+       <!-- <div class="alert alert-warning" *ngIf="!isSearchFailed">
+        <h3> Error: <br />{{ errorMessage }} </h3>
+       </div> -->
+       <div  id="success-div" >
+        <h3 *ngIf="!isUnBlockFailed"> {{ unBlockMsg }} </h3>
+        <h3 *ngIf="!isBlockFailed">  {{ blockMsg }} </h3>
+       </div>
+       <div id="error-div">
+        <h3 *ngIf="isUnBlockFailed"> {{ unBlockErrMessage }} </h3>
+        <h3 *ngIf="isBlockFailed">  {{ blockErrMessage }} </h3>
+       </div>
+       <!-- <div id="error-div" >
+        <h3 *ngIf="!isDeleteFailed"> {{ deleteMsg }} </h3>
+        <h3 *ngIf="isDeleteFailed"> {{ deleteMsg }} </h3>
+       </div> -->
+    </div>
+    
+    
+    
+    
+    

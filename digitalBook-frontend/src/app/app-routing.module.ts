@@ -12,6 +12,7 @@ import { SearchbookComponent } from './searchbook/searchbook.component';
 import { CreatebookComponent } from './createbook/createbook.component';
 import { SubscribedbooksComponent } from './subscribedbooks/subscribedbooks.component';
 import { SubscribebookComponent } from './subscribebook/subscribebook.component';
+import { BooksbyauthorComponent } from './booksbyauthor/booksbyauthor.component';
 
 
 const routes: Routes = [
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'admin', component: BoardAdminComponent },
   { path: 'search', component: SearchbookComponent },
   { path: 'createbook', component: CreatebookComponent },
+  { path: 'booksbyauthor', component: BooksbyauthorComponent},
   { path: 'subscribedbooks', component: SubscribedbooksComponent},
   { path: 'subscribebook', component: SubscribebookComponent},
   { path: '', redirectTo: 'home', pathMatch: 'full' }

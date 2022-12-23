@@ -12,7 +12,9 @@ export class SearchbookComponent implements OnInit {
   constructor(private userService: UserService) { }
 
  content?:bookFound[];
+ errorMessage?:string;
 
+ isSearchFound=false;
   isSuccess=false;
 
   ngOnInit(): void {
@@ -31,10 +33,13 @@ export class SearchbookComponent implements OnInit {
     this.userService.getBooks(this.search).subscribe(
       data => {
         this.content = JSON.parse(data).bookResponseList;
+        this.isSearchFound=true;
         this.isSuccess=true;
       },
       err => {
-        this.content = err.error.message;
+        this.isSearchFound=false;
+        this.isSuccess=true;
+        this.errorMessage = JSON.parse(err.error).message;
       }
     );
   }

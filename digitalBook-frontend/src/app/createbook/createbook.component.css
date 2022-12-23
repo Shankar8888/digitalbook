@@ -47,6 +47,20 @@ button:hover {
   color:white;
 }
 
+#success-div{
+  margin-top: 50px;
+background-color: rgb(91, 248, 141);
+background-size: cover;
+min-height: max-content;
+text-align: center;
+}
+#error-div{
+  /* margin-top: 50px; */
+background-color: rgb(250, 179, 179);
+background-size: cover;
+min-height: max-content;
+text-align: center;
+}
 
 
 

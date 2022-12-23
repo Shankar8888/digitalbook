@@ -15,7 +15,7 @@
                 <th>Publisher</th>  
                 <th>Category</th>
                 <th>Price</th>
-                <th>Logo</th>
+                <!-- <th>Logo</th> -->
             </tr> </table>
     <div *ngFor="let book of books">
         <table id="search-tbl">
@@ -26,18 +26,18 @@
         <td>{{book.publisher}}</td>
         <td>{{book.category}}</td>
         <td>{{book.price}}</td>
-        <td>{{book.logo}}</td>
-        <td><button id='sub-btn' (click)='subscribeBook(book.id)'>Subscribe</button></td>
+        <!-- <td>{{book.logo}}</td> -->
+        <td><button id='sub-btn' (click)='subscribeBook(book.id)'>Subscribe Book</button></td>
     </tr>
     </table>
     </div>
     </div>
 
-    <div class="alert alert-danger" *ngIf="isSubscrFailed">
+    <div id="error-div" *ngIf="isSubscrFailed">
         <h3 id="h3-err">{{ errorMessage }}</h3> 
       </div>
 
-      <div class="alert alert-success" *ngIf="!isSubscrFailed && isSuccessful">
+      <div id="success-div" *ngIf="!isSubscrFailed && isSuccessful">
         <h3 id="h3-success">  {{ this.content }}</h3>
       </div>
 

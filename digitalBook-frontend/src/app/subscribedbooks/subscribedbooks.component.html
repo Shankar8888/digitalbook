@@ -47,23 +47,23 @@
     </div>
 </div>
 
-    <div class="alert alert-danger" *ngIf="isSubscrFoundFailed">
-         <h3 id="h3-err">{{ errorMessage }}</h3>
+    <div id="error-div" *ngIf="isSubscrFoundFailed">
+         <h3>{{ errorMessage }}</h3>
       </div>
 
-      <div class="alert alert-success" *ngIf="!isCancelSubscrFailed && isSuccessful">
-       <h3 id="h3-success">{{ successMsg }}</h3>  
+      <div id="success-div" *ngIf="!isCancelSubscrFailed && isSuccessful">
+       <h3>{{ successMsg }}</h3>  
       </div>
-    <div class="alert alert-danger" *ngIf="isCancelSubscrFailed">
-       <h3 id="h3-err">{{ errorMessage }}</h3>
+    <div id="error-div" *ngIf="isCancelSubscrFailed">
+       <h3>{{ errorMessage }}</h3>
       </div>
 
-      <div *ngIf="!isReadBookFailed && isSuccessful" class="alert alert-success">
-      <h3 id="h3-success">{{ this.bookObj.content }}</h3>  
+      <div *ngIf="!isReadBookFailed && isSuccessful" id="success-div">
+      <h3>{{ this.bookObj.content }}</h3>  
      </div>
 
-     <div class="alert alert-danger" *ngIf="isReadBookFailed">
-        <h3 id="h3-err"> {{ errorMessage }}</h3>
+     <div id="error-div" *ngIf="isReadBookFailed">
+        <h3> {{ errorMessage }}</h3>
      </div>
     
     </div>

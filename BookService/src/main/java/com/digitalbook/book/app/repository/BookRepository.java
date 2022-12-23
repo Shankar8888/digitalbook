@@ -27,7 +27,7 @@ public interface BookRepository extends JpaRepository<Book, Integer>{
 	public List<Book> findAllBooksByIds(List<Integer> getAllBookIds);
 
 	@Query("select b from Book b where b.author =?1")
-	public List<Book> getBooksByAuthor(String authorName);
+	public List<Book> getBooksByAuthor(String authorId);
 
 
 }

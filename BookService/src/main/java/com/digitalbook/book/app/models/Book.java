@@ -30,7 +30,7 @@ public class Book {
 //	@Column(name = "author_id")
 //	private Integer authorId;
 	
-	@NotBlank(message = "Book Author is required")
+//	@NotBlank(message = "Book Author is required")
 	@Column(name = "book_author")
 	private String author;
 	

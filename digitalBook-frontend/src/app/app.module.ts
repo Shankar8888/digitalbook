@@ -18,6 +18,7 @@ import { SearchbookComponent } from './searchbook/searchbook.component';
 import { CreatebookComponent } from './createbook/createbook.component';
 import { SubscribedbooksComponent } from './subscribedbooks/subscribedbooks.component';
 import { SubscribebookComponent } from './subscribebook/subscribebook.component';
+import { BooksbyauthorComponent } from './booksbyauthor/booksbyauthor.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { SubscribebookComponent } from './subscribebook/subscribebook.component'
     SearchbookComponent,
     CreatebookComponent,
     SubscribedbooksComponent,
-    SubscribebookComponent
+    SubscribebookComponent,
+    BooksbyauthorComponent
   ],
   imports: [
     BrowserModule,

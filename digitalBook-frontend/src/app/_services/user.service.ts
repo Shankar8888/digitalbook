@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// const API_URL = 'http://localhost:8081/digitalbooks/';
-const API_URL ='https://c6en53f5tf.execute-api.us-east-1.amazonaws.com/UAT/digitalbooks/';
+const API_URL = 'http://localhost:8081/digitalbooks/';
+// const API_URL ='https://c6en53f5tf.execute-api.us-east-1.amazonaws.com/UAT/digitalbooks/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json',
@@ -14,9 +14,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UserService {
-
-
-
+ 
   constructor(private http: HttpClient) { }
 
   // getPublicContent(): Observable<any> {
@@ -51,7 +49,7 @@ export class UserService {
     category:string,
     price:number,
     content:string,
-    publishedDate:Date,logo:string) : Observable<any>{
+    publishedDate:Date,logo:string) {
     return this.http.post(API_URL + 'save', {
       title,
       author,
@@ -81,5 +79,21 @@ export class UserService {
 
   subscribeBook(userId:number, bookId:number) {
     return this.http.post(API_URL + 'reader/'+userId+'/'+bookId, "", {responseType: 'text'});
+  }
+
+  booksByAuthor(userid: string) {
+    return this.http.get(API_URL+ 'author/'+userid+'/books',{responseType: 'text'});
+  }
+
+  blockBook(_bookId: number) {
+    return this.http.get(API_URL+ 'update/'+_bookId+'?block=true',{responseType: 'text'});
+  }
+
+  unBlockBook(_bookId: number) {
+    return this.http.get(API_URL+ 'update/'+_bookId+'?block=false',{responseType: 'text'});
+  }
+
+  deleteBook(_bookId: number) {
+    return this.http.delete(API_URL+ _bookId,{responseType: 'text'});
   }
 }

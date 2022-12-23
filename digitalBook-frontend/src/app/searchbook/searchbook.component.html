@@ -3,8 +3,8 @@
     <u><h2>Search Book</h2></u>
 <b>Title:</b><br><input type="text" [(ngModel)]="search.title" name="title">
     <br><br>
-<b>Author:</b> <br><input type="text" [(ngModel)]="search.author" name="author">
-<br><br>
+<!-- <b>Author:</b> <br><input type="text" [(ngModel)]="search.author" name="author">
+<br><br> -->
 <b>Publisher:</b> <br><input type="text" [(ngModel)]="search.publisher" name="publisher">
 <br><br>
 <b>Category:</b> <br><input type="text" [(ngModel)]="search.category" name="category">
@@ -13,7 +13,7 @@
 <br><br>
 <button (click)="searchBook()">Search Book</button>
 </div>
-<div *ngIf="isSuccess">
+<div *ngIf="isSearchFound">
     <h3>Books Found:</h3>
     <table id="search-tbl">
         <tr>
@@ -25,16 +25,8 @@
             <th>Price</th>
         </tr> </table>
 <div *ngFor="let book of content">
-    <table id="search-tbl">
-<!-- <tr>
-    <th>BookId</th>
-    <th>Title</th> 
-    <th>Author</th> 
-    <th>Publisher</th>  
-    <th>Category</th>
-    <th>Price</th>
-</tr> -->
-<tr id="tr">
+    <table>
+<tr>
     <td>{{book.id}}</td>
     <td>{{book.title}}</td>
     <td>{{book.author}}</td>
@@ -45,6 +37,9 @@
 </table>
 </div>
 </div>
+<div id="error-div" *ngIf="!isSearchFound">
+    <h3> {{ errorMessage }} </h3>
+   </div>
 </div>
 
 

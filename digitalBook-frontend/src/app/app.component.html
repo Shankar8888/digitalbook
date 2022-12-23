@@ -11,11 +11,14 @@
         <li class="nav-item" *ngIf="showAuthorBoard">
         <a href="/createbook" class="nav-link" routerLink="createbook">CreateBook</a>
       </li>
-      <li class="nav-item" *ngIf="showReaderBoard">
-        <a href="/subscribebook" class="nav-link" routerLink="subscribebook">Subscribe Book</a>
+      <li class="nav-item" *ngIf="showAuthorBoard">
+        <a href="/booksbyauthor" class="nav-link" routerLink="booksbyauthor">ShowMyBooks</a>
       </li>
       <li class="nav-item" *ngIf="showReaderBoard">
-        <a href="/subscribedbooks" class="nav-link" routerLink="subscribedbooks">Book Subscriptions</a>
+        <a href="/subscribebook" class="nav-link" routerLink="subscribebook">SubscribeBook</a>
+      </li>
+      <li class="nav-item" *ngIf="showReaderBoard">
+        <a href="/subscribedbooks" class="nav-link" routerLink="subscribedbooks">BookSubscriptionDetails</a>
       </li>
     </ul>
 

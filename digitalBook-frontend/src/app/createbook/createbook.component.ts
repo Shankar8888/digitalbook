@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as internal from 'events';
+import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
 
 @Component({
@@ -12,7 +13,6 @@ export class CreatebookComponent implements OnInit {
  
   form : any = {
     title:null,
-   author:null,
    publisher:null,
    category:null,
    price:null,
@@ -25,24 +25,28 @@ export class CreatebookComponent implements OnInit {
   isSuccess=false;
   isCreateBookFailed = false;
   errorMessage?:string;
+  userId: any;
  
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,private tokenStorage: TokenStorageService) { }
 
     ngOnInit(): void {
    }
 
    public createBook(): void {
-    const { title,author,publisher,category,
+    const user = this.tokenStorage.getUser();
+    this.userId = user.id;
+    const { title,publisher,category,
       price,content, publishedDate,logo} = this.form;
 
-    this.userService.getCreatedBooks(title,author,publisher,category,
+    this.userService.getCreatedBooks(title,this.userId,publisher,category,
       price,content,publishedDate,logo).subscribe(
       data => {
         console.log(data);
         console.log(Object.values(data));
-        this.successMsg=Object.values(data);
         this.isSuccess = true;
         this.isCreateBookFailed=false;
+        this.successMsg=Object.values(data);
+       
       },
       err => {
         this.errorMessage = err.error.message;
@@ -52,42 +56,3 @@ export class CreatebookComponent implements OnInit {
     );
   }
 }
-
-  //   book : any = {
-  //     title:null,
-  //    author:null,
-  //    publisher:null,
-  //    category:null,
-  //    price:null,
-  //    content:null,
-  //    logo:null,
-  //    publishedDate:null
-  //   };
-  //   errorMessage = '';
-   
-  //  public createBook(){
-  //     const { title,author,publisher,category,
-  //       price,content,
-  //       publishedDate } = this.book;
-  
-  //     this.userService.getCreatedBooks(title,author,publisher,category,
-  //       price,content,publishedDate).subscribe(
-  //       data => {
-  //         console.log(data);
-  //         this.content=data;
-  //         this.isSuccess = true;
-  //         this.isCreateBookFailed=false;
-  //       },
-  //       err => {
-  //         this.errorMessage = err.error.message;
-  //         // this.isSuccess = false;
-  //         this.isCreateBookFailed=true;
-  //       }
-  //     );
-  //   }
-  // }
- 
- export interface bookCreated{
-   id:number;
- }
- 

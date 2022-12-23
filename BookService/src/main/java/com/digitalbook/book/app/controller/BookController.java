@@ -45,11 +45,11 @@ public class BookController {
 		return bookService.getBookById(bookId);
 	}
 	
-	@GetMapping("/{author}")
-	public MasterResponseObject getBookByAuthor(@PathVariable("author") String authorName) {
+	@GetMapping("author/{author-id}/books")
+	public MasterResponseObject getBookByAuthor(@PathVariable("author-id") String authorId) {
 		logger.info("Inside getBookById method in BookController");
 
-		return bookService.getBooksByAuthor(authorName);
+		return bookService.getBooksByAuthor(authorId);
 	}
 	
 	@DeleteMapping("/{book-id}")
